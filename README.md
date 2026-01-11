@@ -1,60 +1,53 @@
-# 🧠 Serverless MNIST Digit Recognizer (TFJS)
+# Serverless MNIST Digit Recognizer
 
 ![Visitor Count](https://hits.seeyoufarm.com/api/count/incr/badge.svg?url=https%3A%2F%2Fgithub.com%2F07subhadip%2FCNN_Project_MNIST_TFJS&count_bg=%2379C83D&title_bg=%23555555&icon=&icon_color=%23E7E7E7&title=visitors&edge_flat=false)
 [![GitHub license](https://img.shields.io/github/license/07subhadip/CNN_Project_MNIST_TFJS)](https://github.com/07subhadip/CNN_Project_MNIST_TFJS)
 ![TensorFlow.js](https://img.shields.io/badge/TensorFlow.js-Powered-orange)
 
-> **A State-of-the-Art (SOTA) Deep Learning model running entirely in your browser!** 🚀
+A deep learning project that deploys a trained CNN model to the web using TensorFlow.js, enabling client-side digit recognition directly in the browser.
+
+### [View Live Demo](https://07subhadip.github.io/CNN_Project_MNIST_TFJS/)
 
 ---
 
-## 🔴 Live Demo
-👉 **[CLICK HERE TO TRY IT LIVE](https://07subhadip.github.io/CNN_Project_MNIST_TFJS/)** 👈
+## Project Overview
 
-*(Draw a digit on the blackboard and watch the AI predict it instantly!)*
+This application serves as a demonstration of **Edge AI**, where machine learning inference occurs locally on the user's device rather than a remote server.
 
----
+We trained a Convolutional Neural Network (CNN) on the MNIST dataset using Python and Keras, achieving ~96% accuracy. The model was then converted into a web-optimized format to run efficiently in JavaScript.
 
-## 💡 About The Project
-This isn't just another digit recognizer. This project demonstrates the power of **Edge AI**. 
-Instead of sending your drawing to a Python server (which is slow and costly), we converted a **96% accurate CNN model** into **TensorFlow.js**.
+**Key Features:**
 
-**Why is this cool?**
-- ⚡ **Zero Latency:** Inference happens locally on your device (Client-side).
-- 🔒 **Privacy First:** Your drawing data never leaves your browser.
-- 🎨 **Interactive UI:** Custom HTML5 Canvas "Blackboard" experience.
-- 📉 **Serverless:** Hosted 100% on GitHub Pages without any backend.
+- **Client-Side Inference:** No backend servers are used. The model runs entirely within the user's browser, ensuring zero latency after the initial load.
+- **Privacy:** Since processed data never leaves the device, user input remains private.
+- **Interactive Interface:** Features a custom HTML5 canvas implementation to capture and preprocess drawing inputs (resizing, grayscale conversion, and normalization) to match the model's expected input tensor.
 
----
+## Technical Architecture
 
-## 🛠️ Tech Stack
-* **Model Training:** Python (Keras/TensorFlow)
-* **Model Conversion:** TensorFlow.js Converter
-* **Frontend:** HTML5 Canvas, CSS3, Vanilla JavaScript
-* **Deployment:** GitHub Pages
+- **Model Training:** Python, Keras, TensorFlow
+- **Web Conversion:** TensorFlow.js Converter (SavedModel format)
+- **Frontend:** HTML5, CSS3, Vanilla JavaScript
+- **Deployment:** GitHub Pages
 
----
+## Running Locally
 
-## 🚀 How to Run Locally
-If you want to test this on your machine:
+To run this project on your local machine:
 
-1. **Clone the repository:**
-   ```bash
-   git clone https://github.com/07subhadip/CNN_Project_MNIST_TFJS.git
-   ```
+1.  **Clone the repository**
 
-2. **Run a local server:** Because of CORS security policies, you cannot simply double-click index.html. You need a local server.
+    ```bash
+    git clone https://github.com/07subhadip/CNN_Project_MNIST_TFJS.git
+    ```
 
-   * **VS Code:** Install "Live Server" extension and click "Go Live".
-   * **Python:** Run `python -m http.server` in the folder.
+2.  **Serve the files**
+    Due to browser CORS policies regarding loading local files, you cannot open `index.html` directly. You must use a local web server.
+
+    - **Python:** Run `python -m http.server` in the project directory.
+    - **VS Code:** Use the "Live Server" extension.
+
+3.  **Access**
+    Open your browser to `http://localhost:8000`.
 
 ---
 
-### 👨‍💻 Author
-**Subhadip Hensh**  
-*Data Scientist & AI Enthusiast*
-
-[📂 View Source Code](https://github.com/07subhadip/CNN_Project_MNIST_TFJS)  
-[🔗 My GitHub Profile](https://github.com/07subhadip)
-
-&copy; 2026 Subhadip Hensh. All Rights Reserved.
+**Developed by Subhadip Hensh**
