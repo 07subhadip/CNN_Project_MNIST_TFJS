@@ -1,6 +1,6 @@
 # Serverless MNIST Digit Recognizer
 
-![Visitor Count](https://hits.seeyoufarm.com/api/count/incr/badge.svg?url=https%3A%2F%2Fgithub.com%2F07subhadip%2FCNN_Project_MNIST_TFJS&count_bg=%2379C83D&title_bg=%23555555&icon=&icon_color=%23E7E7E7&title=visitors&edge_flat=false)
+![Visitor Count](https://visitor-badge.laobi.icu/badge?page_id=07subhadip.CNN_Project_MNIST_TFJS)
 [![GitHub license](https://img.shields.io/github/license/07subhadip/CNN_Project_MNIST_TFJS)](https://github.com/07subhadip/CNN_Project_MNIST_TFJS)
 ![TensorFlow.js](https://img.shields.io/badge/TensorFlow.js-Powered-orange)
 
