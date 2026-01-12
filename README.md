@@ -4,51 +4,70 @@
 [![GitHub license](https://img.shields.io/github/license/07subhadip/CNN_Project_MNIST_TFJS)](https://github.com/07subhadip/CNN_Project_MNIST_TFJS)
 ![TensorFlow.js](https://img.shields.io/badge/TensorFlow.js-Powered-orange)
 
-A deep learning project that deploys a trained CNN model to the web using TensorFlow.js, enabling client-side digit recognition directly in the browser.
+This project demonstrates **Edge AI** by deploying trained Deep Learning models directly to the web using TensorFlow.js. It features a unique **Dual-Model Architecture**, allowing users to switch between a Convolutional Neural Network (CNN) and a classic Multi-Layer Perceptron (MLP) in real-time to compare performance outcomes.
 
-### [View Live Demo](https://07subhadip.github.io/CNN_Project_MNIST_TFJS/)
+All inference happens client-side, ensuring **zero latency** and **complete privacy** as user data never leaves the browser.
+
+### [🔴 Click Here to Try the Live Demo](https://07subhadip.github.io/CNN_Project_MNIST_TFJS/)
 
 ---
 
-## Project Overview
+## ⚡ Key Features
 
-This application serves as a demonstration of **Edge AI**, where machine learning inference occurs locally on the user's device rather than a remote server.
+- **Dual-Model Support:** Instantly toggle between CNN and MLP models via the UI.
+- **Edge AI:** Inference runs strictly on the client CPU/GPU using WebGL acceleration.
+- **Privacy-First:** No backend API calls; drawings are processed locally.
+- **Interactive Canvas:** Custom HTML5 drawing board with preprocessing logic (grayscale, resizing, normalization) that matches the training pipeline.
 
-We trained a Convolutional Neural Network (CNN) on the MNIST dataset using Python and Keras, achieving ~96% accuracy. The model was then converted into a web-optimized format to run efficiently in JavaScript.
+---
 
-**Key Features:**
+## ⚔️ Model Comparison
 
-- **Client-Side Inference:** No backend servers are used. The model runs entirely within the user's browser, ensuring zero latency after the initial load.
-- **Privacy:** Since processed data never leaves the device, user input remains private.
-- **Interactive Interface:** Features a custom HTML5 canvas implementation to capture and preprocess drawing inputs (resizing, grayscale conversion, and normalization) to match the model's expected input tensor.
-- **Dual Model Comparison:** Switch between SOTA CNN (96% acc) and Simple MLP models in real-time to see performance differences.
+This application allows you to compare two different neural network architectures side-by-side:
 
-## Technical Architecture
+| Model Architecture | Accuracy | Description                                                                                                                                 |
+| :----------------- | :------- | :------------------------------------------------------------------------------------------------------------------------------------------ |
+| **CNN (SOTA)**     | **~98%** | Convolutional Neural Network. Uses spatial filters to capture patterns irrespective of position. The industry standard for computer vision. |
+| **MLP (Simple)**   | **~97%** | Multi-Layer Perceptron. A dense, fully connected network. Simpler architecture but highly effective on the MNIST dataset.                   |
+
+---
+
+## 🛠️ Tech Stack
 
 - **Model Training:** Python, Keras, TensorFlow
-- **Web Conversion:** TensorFlow.js Converter (SavedModel format)
-- **Frontend:** HTML5, CSS3, Vanilla JavaScript
-- **Deployment:** GitHub Pages
+- **Conversion:** TensorFlow.js Converter (SavedModel format)
+- **Frontend:** HTML5 Canvas, CSS3, Vanilla JavaScript
+- **Inference Engine:** TensorFlow.js (`tfjs-graph-model` & `tfjs-layers-model`)
 
-## Running Locally
+---
 
-To run this project on your local machine:
+## 🏃‍♂️ How to Run Locally
+
+To test or modify this project on your local machine:
 
 1.  **Clone the repository**
 
     ```bash
     git clone https://github.com/07subhadip/CNN_Project_MNIST_TFJS.git
+    cd CNN_Project_MNIST_TFJS
     ```
 
-2.  **Serve the files**
-    Due to browser CORS policies regarding loading local files, you cannot open `index.html` directly. You must use a local web server.
+2.  **Start a Local Server**
+    Due to browser CORS policies, you cannot open `index.html` directly.
 
-    - **Python:** Run `python -m http.server` in the project directory.
-    - **VS Code:** Use the "Live Server" extension.
+    - **Python:**
+      ```bash
+      python -m http.server
+      ```
+    - **Node.js:**
+      ```bash
+      npx http-server
+      ```
 
-3.  **Access**
-    Open your browser to `http://localhost:8000`.
+3.  **Access the App**
+    Open your browser and navigate to `http://localhost:8000`.
 
 ---
 
-**Developed by Subhadip Hensh**
+**Developed by Subhadip Hensh**  
+&copy; 2026 All Rights Reserved.
