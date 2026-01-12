@@ -21,6 +21,7 @@ We trained a Convolutional Neural Network (CNN) on the MNIST dataset using Pytho
 - **Client-Side Inference:** No backend servers are used. The model runs entirely within the user's browser, ensuring zero latency after the initial load.
 - **Privacy:** Since processed data never leaves the device, user input remains private.
 - **Interactive Interface:** Features a custom HTML5 canvas implementation to capture and preprocess drawing inputs (resizing, grayscale conversion, and normalization) to match the model's expected input tensor.
+- **Dual Model Comparison:** Switch between SOTA CNN (96% acc) and Simple MLP models in real-time to see performance differences.
 
 ## Technical Architecture
 
