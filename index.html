@@ -1,502 +1,445 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>MNIST Digit Recognizer</title>
-    <link
-      href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&display=swap"
-      rel="stylesheet"
-    />
-    <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@latest/dist/tf.min.js"></script>
-    <style>
-      :root {
-        --bg-color: #0f172a;
-        --panel-bg: #1e293b;
-        --accent-color: #3b82f6;
-        --text-primary: #f8fafc;
-        --text-secondary: #94a3b8;
-        --board-border: #334155;
-        --success-color: #10b981;
-      }
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>MNIST Digit Recognizer</title>
+        <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&display=swap" rel="stylesheet">
+        <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@latest/dist/tf.min.js"></script>
+        <style>
+            :root {
+                --bg-color: #0f172a;
+                --panel-bg: #1e293b;
+                --accent-color: #3b82f6;
+                --text-primary: #f8fafc;
+                --text-secondary: #94a3b8;
+                --board-border: #334155;
+                --success-color: #10b981;
+            }
 
-      body {
-        background-color: var(--bg-color);
-        color: var(--text-primary);
-        font-family: "Outfit", sans-serif;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
-        min-height: 100vh;
-        margin: 0;
-        padding: 20px;
-      }
-
-      h1 {
-        font-size: 2.5rem;
-        margin-bottom: 0.5rem;
-        background: linear-gradient(135deg, #60a5fa 0%, #a78bfa 100%);
-        -webkit-background-clip: text;
-        background-clip: text;
-        -webkit-text-fill-color: transparent;
-      }
-
-      .subtitle {
-        color: var(--text-secondary);
-        margin-bottom: 2rem;
-      }
-
-      .container {
-        display: flex;
-        flex-wrap: wrap;
-        gap: 2rem;
-        justify-content: center;
-        max-width: 1000px;
-        width: 100%;
-      }
-
-      .card {
-        background: var(--panel-bg);
-        padding: 1.5rem;
-        border-radius: 1.5rem;
-        border: 1px solid var(--board-border);
-        box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.3);
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-      }
-
-      canvas {
-        background: #000;
-        border-radius: 1rem;
-        border: 2px solid var(--board-border);
-        cursor: crosshair;
-        touch-action: none;
-      }
-
-      .controls {
-        display: flex;
-        gap: 1rem;
-        width: 100%;
-        margin-top: 1.5rem;
-        align-items: center;
-      }
-
-      select {
-        flex: 1.5;
-        padding: 0.75rem;
-        border-radius: 0.75rem;
-        border: 2px solid var(--board-border);
-        background-color: transparent;
-        color: var(--text-primary);
-        font-family: "Outfit", sans-serif;
-        font-weight: 600;
-        cursor: pointer;
-        outline: none;
-      }
-
-      select:hover {
-        border-color: var(--text-secondary);
-      }
-
-      select option {
-        background-color: var(--panel-bg);
-        color: var(--text-primary);
-      }
-
-      button {
-        flex: 1;
-        padding: 0.75rem;
-        border-radius: 0.75rem;
-        border: none;
-        font-weight: 600;
-        cursor: pointer;
-        transition: transform 0.2s;
-      }
-
-      button:active {
-        transform: scale(0.98);
-      }
-
-      .btn-predict {
-        background: var(--accent-color);
-        color: white;
-      }
-
-      .btn-clear {
-        background: transparent;
-        border: 2px solid var(--board-border);
-        color: var(--text-secondary);
-      }
-
-      .result-panel {
-        min-width: 300px;
-        justify-content: center;
-        text-align: center;
-      }
-
-      .prediction {
-        font-size: 8rem;
-        font-weight: 700;
-        color: var(--success-color);
-        margin: 1rem 0;
-      }
-
-      .bar-container {
-        width: 100%;
-        background: rgba(255, 255, 255, 0.1);
-        border-radius: 1rem;
-        height: 1.5rem;
-        overflow: hidden;
-        margin-top: 0.5rem;
-      }
-
-      .bar {
-        height: 100%;
-        background: var(--success-color);
-        width: 0%;
-        transition: width 0.3s ease;
-      }
-
-      .status {
-        margin-top: auto;
-        color: var(--text-secondary);
-        font-size: 0.85rem;
-      }
-
-      footer {
-        width: 100%;
-        background-color: #0b1120;
-        border-top: 1px solid var(--board-border);
-        padding: 2rem 1rem;
-        margin-top: 3rem;
-        text-align: center;
-      }
-
-      .footer-content {
-        display: flex;
-        flex-direction: column;
-        gap: 0.5rem;
-        font-size: 0.95rem;
-        color: var(--text-secondary);
-      }
-
-      .developer-highlight {
-        color: var(--accent-color);
-        font-weight: 600;
-        font-size: 1.1rem;
-      }
-
-      .github-link {
-        position: absolute;
-        top: 2rem;
-        right: 2rem;
-        color: var(--text-primary);
-        opacity: 0.6;
-        transition: all 0.3s ease;
-        z-index: 100;
-      }
-
-      .github-link:hover {
-        opacity: 1;
-        transform: scale(1.1) rotate(5deg);
-        color: #ffffff;
-      }
-    </style>
-  </head>
-  <body>
-    <a
-      href="https://github.com/07subhadip/CNN-Projects/blob/main/MNIST_CNN.ipynb"
-      target="_blank"
-      class="github-link"
-      title="View Source on GitHub"
-    >
-      <svg height="32" viewBox="0 0 16 16" width="32" fill="currentColor">
-        <path
-          fill-rule="evenodd"
-          d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"
-        ></path>
-      </svg>
-    </a>
-
-    <div
-      style="
-        flex: 1;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
-        width: 100%;
-      "
-    >
-      <header style="text-align: center">
-        <h1>MNIST Digit Recognizer</h1>
-        <p class="subtitle">Draw a digit (0-9) on the board</p>
-      </header>
-
-      <div class="container">
-        <div class="card">
-          <canvas id="canvas" width="400" height="400"></canvas>
-          <div class="controls">
-            <select id="modelSelector">
-              <option value="cnn">CNN Model (SOTA)</option>
-              <option value="mlp">MLP Model (Simple)</option>
-            </select>
-            <button class="btn-clear" onclick="clearBoard()">Clear</button>
-            <button class="btn-predict" onclick="predictDigit()">
-              Predict
-            </button>
-          </div>
-        </div>
-
-        <div class="card result-panel">
-          <h3
-            style="
-              color: var(--text-secondary);
-              text-transform: uppercase;
-              letter-spacing: 1px;
-            "
-          >
-            Prediction
-          </h3>
-          <div id="prediction" class="prediction">-</div>
-
-          <div style="width: 100%; text-align: left">
-            <div
-              style="
+            body {
+                background-color: var(--bg-color);
+                color: var(--text-primary);
+                font-family: "Outfit", sans-serif;
                 display: flex;
-                justify-content: space-between;
+                flex-direction: column;
+                align-items: center;
+                justify-content: center;
+                min-height: 100vh;
+                margin: 0;
+                padding: 20px;
+            }
+
+            h1 {
+                font-size: 2.5rem;
+                margin-bottom: 0.5rem;
+                background: linear-gradient(135deg, #60a5fa 0%, #a78bfa 100%);
+                -webkit-background-clip: text;
+                background-clip: text;
+                -webkit-text-fill-color: transparent;
+            }
+
+            .subtitle {
                 color: var(--text-secondary);
-                font-size: 0.9rem;
-              "
-            >
-              <span>Confidence</span>
-              <span id="confidenceVal">0%</span>
-            </div>
-            <div class="bar-container">
-              <div id="confidenceBar" class="bar"></div>
-            </div>
-          </div>
-
-          <div
-            id="predictionSource"
-            style="
-              margin-top: 1rem;
-              font-size: 0.8rem;
-              color: var(--accent-color);
-            "
-          ></div>
-
-          <div id="status" class="status">Loading models...</div>
-        </div>
-      </div>
-    </div>
-
-    <footer>
-      <div class="footer-content">
-        <div>
-          Developed by <span class="developer-highlight">Subhadip Hensh</span>
-        </div>
-        <div>MNIST SOTA CNN Project</div>
-        <div style="font-size: 0.8rem; margin-top: 0.5rem; opacity: 0.7">
-          &copy; 2026 All Rights Reserved.
-        </div>
-      </div>
-    </footer>
-
-    <script>
-      const MODEL_CNN_PATH = "./tfjs_model/model.json";
-      const MODEL_MLP_PATH = "./tfjs_model_mlp/model.json";
-      const CANVAS_SIZE = 400;
-      const INPUT_SIZE = 28;
-
-      let modelCNN = null;
-      let modelMLP = null;
-      let isDrawing = false;
-      let ctx;
-      let lastX = 0;
-      let lastY = 0;
-
-      const canvas = document.getElementById("canvas");
-      const predictionEl = document.getElementById("prediction");
-      const confBar = document.getElementById("confidenceBar");
-      const confVal = document.getElementById("confidenceVal");
-      const statusEl = document.getElementById("status");
-      const modelSelector = document.getElementById("modelSelector");
-      const predictionSourceEl = document.getElementById("predictionSource");
-
-      window.onload = async () => {
-        initCanvas();
-        await loadModels();
-      };
-
-      async function loadModels() {
-        try {
-          const cnnPromise = loadSingleModel(MODEL_CNN_PATH, "CNN");
-          const mlpPromise = loadSingleModel(MODEL_MLP_PATH, "MLP");
-
-          const [cnn, mlp] = await Promise.all([cnnPromise, mlpPromise]);
-          modelCNN = cnn;
-          modelMLP = mlp;
-
-          if (modelCNN && modelMLP) {
-            statusEl.innerText = "All Systems Ready";
-            statusEl.style.color = "#10b981";
-          } else if (modelCNN || modelMLP) {
-            statusEl.innerText = "Partial System Ready";
-            statusEl.style.color = "#fbbf24";
-          } else {
-            statusEl.innerText = "System Failure";
-            statusEl.style.color = "#ef4444";
-          }
-        } catch (e) {
-          console.error(e);
-          statusEl.innerText = "Error Loading Models";
-          statusEl.style.color = "#ef4444";
-        }
-      }
-
-      async function loadSingleModel(path, name) {
-        try {
-          const m = await tf.loadGraphModel(path);
-          console.log(`${name} loaded as GraphModel`);
-          return m;
-        } catch (e) {
-          console.warn(`${name} Graph load failed, trying Layers...`);
-          try {
-            const m = await tf.loadLayersModel(path);
-            console.log(`${name} loaded as LayersModel`);
-            return m;
-          } catch (e2) {
-            console.error(`Failed to load ${name}:`, e2);
-            return null;
-          }
-        }
-      }
-
-      function initCanvas() {
-        ctx = canvas.getContext("2d");
-        ctx.fillStyle = "black";
-        ctx.fillRect(0, 0, CANVAS_SIZE, CANVAS_SIZE);
-
-        ctx.strokeStyle = "white";
-        ctx.lineWidth = 15;
-        ctx.lineCap = "round";
-        ctx.lineJoin = "round";
-
-        canvas.addEventListener("mousedown", startDrawing);
-        canvas.addEventListener("mousemove", draw);
-        canvas.addEventListener("mouseup", stopDrawing);
-        canvas.addEventListener("mouseout", stopDrawing);
-
-        canvas.addEventListener(
-          "touchstart",
-          (e) => {
-            e.preventDefault();
-            const touch = e.touches[0];
-            const rect = canvas.getBoundingClientRect();
-            startDrawing({
-              offsetX: touch.clientX - rect.left,
-              offsetY: touch.clientY - rect.top,
-            });
-          },
-          { passive: false }
-        );
-
-        canvas.addEventListener(
-          "touchmove",
-          (e) => {
-            e.preventDefault();
-            const touch = e.touches[0];
-            const rect = canvas.getBoundingClientRect();
-            draw({
-              offsetX: touch.clientX - rect.left,
-              offsetY: touch.clientY - rect.top,
-            });
-          },
-          { passive: false }
-        );
-
-        canvas.addEventListener("touchend", stopDrawing);
-      }
-
-      function startDrawing(e) {
-        isDrawing = true;
-        [lastX, lastY] = [e.offsetX, e.offsetY];
-      }
-
-      function draw(e) {
-        if (!isDrawing) return;
-        ctx.beginPath();
-        ctx.moveTo(lastX, lastY);
-        ctx.lineTo(e.offsetX, e.offsetY);
-        ctx.stroke();
-        [lastX, lastY] = [e.offsetX, e.offsetY];
-      }
-
-      function stopDrawing() {
-        isDrawing = false;
-      }
-
-      function clearBoard() {
-        ctx.fillStyle = "black";
-        ctx.fillRect(0, 0, CANVAS_SIZE, CANVAS_SIZE);
-        predictionEl.innerText = "-";
-        confBar.style.width = "0%";
-        confVal.innerText = "0%";
-        predictionSourceEl.innerText = "";
-      }
-
-        async function predictDigit() {
-            const selected = modelSelector.value;
-            const model = selected === 'cnn' ? modelCNN : modelMLP;
-            const modelName = selected === 'cnn' ? 'CNN (SOTA)' : 'MLP (Simple)';
-
-            if (!model) {
-                alert(`${modelName} is not loaded yet!`);
-                return;
+                margin-bottom: 2rem;
             }
 
-            try {
-                tf.tidy(() => {
-                    let tensor = tf.browser.fromPixels(canvas, 1);
-                    let resized = tf.image.resizeBilinear(tensor, [INPUT_SIZE, INPUT_SIZE]);
-                    let normalized = resized.div(tf.scalar(255.0));
-
-                    let inputTensor;
-                    if (selected === 'cnn') {
-                        inputTensor = normalized.expandDims(0);
-                    } else {
-                        inputTensor = normalized.reshape([1, 28, 28]);
-                    }
-
-
-                    let prediction;
-                    if (model.execute) {
-                        prediction = model.execute(inputTensor);
-                    } else {
-                        prediction = model.predict(inputTensor);
-                    }
-                    
-                    if (Array.isArray(prediction)) prediction = prediction[0];
-                    
-                    let values = prediction.dataSync();
-
-                    let digit = values.indexOf(Math.max(...values));
-                    let confidence = Math.max(...values);
-
-                    predictionEl.innerText = digit;
-                    let confPercent = (confidence * 100).toFixed(1) + '%';
-                    confBar.style.width = confPercent;
-                    confVal.innerText = confPercent;
-                    predictionSourceEl.innerText = `Predicted by: ${modelName}`;
-                });
-            } catch (e) {
-                console.error("Prediction Error:", e);
-                alert(`Prediction failed: ${e.message}`);
+            .container {
+                display: flex;
+                flex-wrap: wrap;
+                gap: 2rem;
+                justify-content: center;
+                max-width: 1000px;
+                width: 100%;
             }
-        }
-    </script>
-  </body>
+
+            .card {
+                background: var(--panel-bg);
+                padding: 1.5rem;
+                border-radius: 1.5rem;
+                border: 1px solid var(--board-border);
+                box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.3);
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+            }
+
+            canvas {
+                background: #000;
+                border-radius: 1rem;
+                border: 2px solid var(--board-border);
+                cursor: crosshair;
+                touch-action: none;
+            }
+
+            .controls {
+                display: flex;
+                gap: 1rem;
+                width: 100%;
+                margin-top: 1.5rem;
+                align-items: center;
+            }
+
+            select {
+                flex: 1.5;
+                padding: 0.75rem;
+                border-radius: 0.75rem;
+                border: 2px solid var(--board-border);
+                background-color: transparent;
+                color: var(--text-primary);
+                font-family: "Outfit", sans-serif;
+                font-weight: 600;
+                cursor: pointer;
+                outline: none;
+            }
+
+            select:hover {
+                border-color: var(--text-secondary);
+            }
+
+            select option {
+                background-color: var(--panel-bg);
+                color: var(--text-primary);
+            }
+
+            button {
+                flex: 1;
+                padding: 0.75rem;
+                border-radius: 0.75rem;
+                border: none;
+                font-weight: 600;
+                cursor: pointer;
+                transition: transform 0.2s;
+            }
+
+            button:active {
+                transform: scale(0.98);
+            }
+
+            .btn-predict {
+                background: var(--accent-color);
+                color: white;
+            }
+
+            .btn-clear {
+                background: transparent;
+                border: 2px solid var(--board-border);
+                color: var(--text-secondary);
+            }
+
+            .result-panel {
+                min-width: 300px;
+                justify-content: center;
+                text-align: center;
+            }
+
+            .prediction {
+                font-size: 8rem;
+                font-weight: 700;
+                color: var(--success-color);
+                margin: 1rem 0;
+            }
+
+            .bar-container {
+                width: 100%;
+                background: rgba(255, 255, 255, 0.1);
+                border-radius: 1rem;
+                height: 1.5rem;
+                overflow: hidden;
+                margin-top: 0.5rem;
+            }
+
+            .bar {
+                height: 100%;
+                background: var(--success-color);
+                width: 0%;
+                transition: width 0.3s ease;
+            }
+
+            .status {
+                margin-top: auto;
+                color: var(--text-secondary);
+                font-size: 0.85rem;
+            }
+
+            footer {
+                width: 100%;
+                background-color: #0b1120;
+                border-top: 1px solid var(--board-border);
+                padding: 2rem 1rem;
+                margin-top: 3rem;
+                text-align: center;
+            }
+
+            .footer-content {
+                display: flex;
+                flex-direction: column;
+                gap: 0.5rem;
+                font-size: 0.95rem;
+                color: var(--text-secondary);
+            }
+
+            .developer-highlight {
+                color: var(--accent-color);
+                font-weight: 600;
+                font-size: 1.1rem;
+            }
+
+            .github-link {
+                position: absolute;
+                top: 2rem;
+                right: 2rem;
+                color: var(--text-primary);
+                opacity: 0.6;
+                transition: all 0.3s ease;
+                z-index: 100;
+            }
+
+            .github-link:hover {
+                opacity: 1;
+                transform: scale(1.1) rotate(5deg);
+                color: #ffffff;
+            }
+        </style>
+    </head>
+    <body>
+        <a href="https://github.com/07subhadip/CNN-Projects/blob/main/MNIST_CNN.ipynb" target="_blank" class="github-link" title="View Source on GitHub">
+            <svg height="32" viewBox="0 0 16 16" width="32" fill="currentColor">
+                <path fill-rule="evenodd" d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"></path>
+            </svg>
+        </a>
+
+        <div style="flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; width: 100%;">
+            <header style="text-align: center;">
+                <h1>MNIST Digit Recognizer</h1>
+                <p class="subtitle">Draw a digit (0-9) on the board</p>
+            </header>
+
+            <div class="container">
+                <div class="card">
+                    <canvas id="canvas" width="400" height="400"></canvas>
+                    <div class="controls">
+                        <select id="modelSelector">
+                            <option value="cnn">CNN Model (SOTA)</option>
+                            <option value="mlp">MLP Model (Simple)</option>
+                        </select>
+                        <button class="btn-clear" onclick="clearBoard()">Clear</button>
+                        <button class="btn-predict" onclick="predictDigit()">Predict</button>
+                    </div>
+                </div>
+
+                <div class="card result-panel">
+                    <h3 style="color: var(--text-secondary); text-transform: uppercase; letter-spacing: 1px;">Prediction</h3>
+                    <div id="prediction" class="prediction">-</div>
+
+                    <div style="width: 100%; text-align: left;">
+                        <div style="display: flex; justify-content: space-between; color: var(--text-secondary); font-size: 0.9rem;">
+                            <span>Confidence</span>
+                            <span id="confidenceVal">0%</span>
+                        </div>
+                        <div class="bar-container">
+                            <div id="confidenceBar" class="bar"></div>
+                        </div>
+                    </div>
+
+                    <div id="predictionSource" style="margin-top: 1rem; font-size: 0.8rem; color: var(--accent-color);"></div>
+
+                    <div id="status" class="status">Loading models...</div>
+                </div>
+            </div>
+        </div>
+
+        <footer>
+            <div class="footer-content">
+                <div>Developed by <span class="developer-highlight">Subhadip Hensh</span></div>
+                <div>MNIST SOTA CNN Project</div>
+                <div style="font-size: 0.8rem; margin-top: 0.5rem; opacity: 0.7;">&copy; 2026 All Rights Reserved.</div>
+            </div>
+        </footer>
+
+        <script>
+            const MODEL_CNN_PATH = "./tfjs_model/model.json";
+            const MODEL_MLP_PATH = "./tfjs_model_mlp/model.json";
+            const CANVAS_SIZE = 400;
+            const INPUT_SIZE = 28;
+
+            let modelCNN = null;
+            let modelMLP = null;
+            let isDrawing = false;
+            let ctx;
+            let lastX = 0;
+            let lastY = 0;
+
+            const canvas = document.getElementById("canvas");
+            const predictionEl = document.getElementById("prediction");
+            const confBar = document.getElementById("confidenceBar");
+            const confVal = document.getElementById("confidenceVal");
+            const statusEl = document.getElementById("status");
+            const modelSelector = document.getElementById("modelSelector");
+            const predictionSourceEl = document.getElementById("predictionSource");
+
+            window.onload = async () => {
+                initCanvas();
+                await loadModels();
+            };
+
+            async function loadModels() {
+                try {
+                    const cnnPromise = loadSingleModel(MODEL_CNN_PATH, "CNN");
+                    const mlpPromise = loadSingleModel(MODEL_MLP_PATH, "MLP");
+
+                    const [cnn, mlp] = await Promise.all([cnnPromise, mlpPromise]);
+                    modelCNN = cnn;
+                    modelMLP = mlp;
+
+                    if (modelCNN && modelMLP) {
+                        statusEl.innerText = "All Systems Ready";
+                        statusEl.style.color = "#10b981";
+                    } else if (modelCNN || modelMLP) {
+                        statusEl.innerText = "Partial System Ready";
+                        statusEl.style.color = "#fbbf24";
+                    } else {
+                        statusEl.innerText = "System Failure";
+                        statusEl.style.color = "#ef4444";
+                    }
+                } catch (e) {
+                    console.error(e);
+                    statusEl.innerText = "Error Loading Models";
+                    statusEl.style.color = "#ef4444";
+                }
+            }
+
+            async function loadSingleModel(path, name) {
+                try {
+                    const m = await tf.loadGraphModel(path);
+                    console.log(`${name} loaded as GraphModel`);
+                    return m;
+                } catch (e) {
+                    console.warn(`${name} Graph load failed, trying Layers...`);
+                    try {
+                        const m = await tf.loadLayersModel(path);
+                        console.log(`${name} loaded as LayersModel`);
+                        return m;
+                    } catch (e2) {
+                        console.error(`Failed to load ${name}:`, e2);
+                        return null;
+                    }
+                }
+            }
+
+            function initCanvas() {
+                ctx = canvas.getContext("2d");
+                ctx.fillStyle = "black";
+                ctx.fillRect(0, 0, CANVAS_SIZE, CANVAS_SIZE);
+
+                ctx.strokeStyle = "white";
+                ctx.lineWidth = 15;
+                ctx.lineCap = "round";
+                ctx.lineJoin = "round";
+
+                canvas.addEventListener("mousedown", startDrawing);
+                canvas.addEventListener("mousemove", draw);
+                canvas.addEventListener("mouseup", stopDrawing);
+                canvas.addEventListener("mouseout", stopDrawing);
+
+                canvas.addEventListener("touchstart", (e) => {
+                    e.preventDefault();
+                    const touch = e.touches[0];
+                    const rect = canvas.getBoundingClientRect();
+                    startDrawing({
+                        offsetX: touch.clientX - rect.left,
+                        offsetY: touch.clientY - rect.top,
+                    });
+                }, { passive: false });
+
+                canvas.addEventListener("touchmove", (e) => {
+                    e.preventDefault();
+                    const touch = e.touches[0];
+                    const rect = canvas.getBoundingClientRect();
+                    draw({
+                        offsetX: touch.clientX - rect.left,
+                        offsetY: touch.clientY - rect.top,
+                    });
+                }, { passive: false });
+
+                canvas.addEventListener("touchend", stopDrawing);
+            }
+
+            function startDrawing(e) {
+                isDrawing = true;
+                [lastX, lastY] = [e.offsetX, e.offsetY];
+            }
+
+            function draw(e) {
+                if (!isDrawing) return;
+                ctx.beginPath();
+                ctx.moveTo(lastX, lastY);
+                ctx.lineTo(e.offsetX, e.offsetY);
+                ctx.stroke();
+                [lastX, lastY] = [e.offsetX, e.offsetY];
+            }
+
+            function stopDrawing() {
+                isDrawing = false;
+            }
+
+            function clearBoard() {
+                ctx.fillStyle = "black";
+                ctx.fillRect(0, 0, CANVAS_SIZE, CANVAS_SIZE);
+                predictionEl.innerText = "-";
+                confBar.style.width = "0%";
+                confVal.innerText = "0%";
+                predictionSourceEl.innerText = "";
+            }
+
+            async function predictDigit() {
+                const selected = modelSelector.value;
+                const model = selected === 'cnn' ? modelCNN : modelMLP;
+                const modelName = selected === 'cnn' ? 'CNN (SOTA)' : 'MLP (Simple)';
+
+                if (!model) {
+                    alert(`${modelName} is not loaded yet!`);
+                    return;
+                }
+
+                try {
+                    tf.tidy(() => {
+                        let tensor = tf.browser.fromPixels(canvas, 1);
+                        let resized = tf.image.resizeBilinear(tensor, [INPUT_SIZE, INPUT_SIZE]);
+                        let normalized = resized.div(tf.scalar(255.0));
+
+                        let inputTensor;
+                        if (selected === 'cnn') {
+                            inputTensor = normalized.expandDims(0);
+                        } else {
+                            inputTensor = normalized.reshape([1, 28, 28]);
+                        }
+
+                        let prediction;
+                        if (model.execute) {
+                            prediction = model.execute(inputTensor);
+                        } else {
+                            prediction = model.predict(inputTensor);
+                        }
+
+                        if (Array.isArray(prediction)) prediction = prediction[0];
+
+                        let values = prediction.dataSync();
+
+                        let digit = values.indexOf(Math.max(...values));
+                        let confidence = Math.max(...values);
+
+                        predictionEl.innerText = digit;
+                        let confPercent = (confidence * 100).toFixed(1) + '%';
+                        confBar.style.width = confPercent;
+                        confVal.innerText = confPercent;
+                        predictionSourceEl.innerText = `Predicted by: ${modelName}`;
+                    });
+                } catch (e) {
+                    console.error("Prediction Error:", e);
+                    alert(`Prediction failed: ${e.message}`);
+                }
+            }
+        </script>
+    </body>
 </html>

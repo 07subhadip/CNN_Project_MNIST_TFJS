@@ -3,8 +3,6 @@ import types
 import os
 import shutil
 
-
-
 import tensorflow as tf
 import tensorflowjs as tfjs
 
