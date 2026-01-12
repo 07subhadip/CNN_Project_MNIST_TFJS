@@ -69,5 +69,7 @@ To test or modify this project on your local machine:
 
 ---
 
-**Developed by Subhadip Hensh**  
-&copy; 2026 All Rights Reserved.
+<div align="center">
+  <strong>Developed by Subhadip Hensh</strong><br>
+  &copy; 2026 All Rights Reserved.
+</div>
