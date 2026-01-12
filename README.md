@@ -1,6 +1,6 @@
 # Serverless MNIST Digit Recognizer
 
-![Visitor Count](https://visitor-badge.laobi.icu/badge?page_id=07subhadip.CNN_Project_MNIST_TFJS)
+![Visitor Count](https://komarev.com/ghpvc/?username=07subhadip_CNN_Project_MNIST_TFJS&label=Views&color=0e75b6&style=flat)
 [![GitHub license](https://img.shields.io/github/license/07subhadip/CNN_Project_MNIST_TFJS)](https://github.com/07subhadip/CNN_Project_MNIST_TFJS)
 ![TensorFlow.js](https://img.shields.io/badge/TensorFlow.js-Powered-orange)
 
