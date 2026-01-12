@@ -1,7 +1,7 @@
 # Serverless MNIST Digit Recognizer
 
 ![Visitor Count](https://komarev.com/ghpvc/?username=07subhadip-CNN-Project-MNIST-TFJS&label=Views&color=0e75b6&style=flat)
-[![GitHub license](https://img.shields.io/github/license/07subhadip/CNN_Project_MNIST_TFJS)](https://github.com/07subhadip/CNN_Project_MNIST_TFJS)
+[![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](https://github.com/07subhadip/CNN_Project_MNIST_TFJS/blob/main/LICENSE)
 ![TensorFlow.js](https://img.shields.io/badge/TensorFlow.js-Powered-orange)
 
 This project demonstrates **Edge AI** by deploying trained Deep Learning models directly to the web using TensorFlow.js. It features a unique **Dual-Model Architecture**, allowing users to switch between a Convolutional Neural Network (CNN) and a classic Multi-Layer Perceptron (MLP) in real-time to compare performance outcomes.
