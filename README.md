@@ -25,14 +25,14 @@ All inference happens client-side, ensuring **zero latency** and **complete priv
 
 This application allows you to compare two different neural network architectures side-by-side. Below are the actual performance metrics captured during training on the MNIST dataset:
 
-| Metric                | CNN Model (SOTA) | MLP Model (Simple) |
-| :-------------------- | :--------------- | :----------------- |
-| **Training Accuracy** | **99.59%**       | 97.47%             |
-| **Testing Accuracy**  | **98.88%**       | 97.47%             |
-| **Training Loss**     | 0.0113           | 0.1771             |
-| **Testing Loss**      | 0.0384           | 0.1771             |
+| Metric                | Metric     | CNN Model (SOTA) | MLP Model (Simple) |
+| :-------------------- | :--------- | :--------------- | ------------------ |
+| **Training Accuracy** | **99.59%** | 97.47%           |
+| **Testing Accuracy**  | **98.88%** | 96.64%           |
+| **Training Loss**     | 0.0113     | 0.1765           |
+| **Testing Loss**      | 0.0384     | 0.1944           |
 
-The CNN model significantly outperforms the MLP in testing accuracy (98.88% vs 97.47%) and generalization, proving the effectiveness of Convolutions for spatial data.
+The CNN model achieves ~98.9% accuracy compared to the MLP's ~96.6%, showing better generalization on unseen data.
 
 ---
 
